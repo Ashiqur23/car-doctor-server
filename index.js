@@ -90,7 +90,7 @@ async function run() {
       if (decoded?.email !== req.query.email) {
         return res
           .status(403)
-          .send({ error: true, message: "forbidden access" });
+          .send({ error: 1, message: "forbidden access" });
       }
       // console.log(req.headers.authorization);
       let query = {};
