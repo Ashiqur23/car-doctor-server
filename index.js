@@ -27,10 +27,12 @@ const client = new MongoClient(uri, {
 
 const verifyJwt = (req, res, next) => {
   const authorization = req?.headers?.authorization;
+
   if (!authorization) {
     return res.status(401).send({ error: true, message: "unAuthorized User" });
   }
   const token = authorization.split(" ")[1];
+
   jwt.verify(token, process.env.ACCESS_TOKET_SECRET, (err, decoded) => {
     if (err) {
       return res
@@ -38,6 +40,7 @@ const verifyJwt = (req, res, next) => {
         .send({ error: true, message: "unAuthorized User" });
     }
     req.decoded = decoded;
+    console.log(req.decoded, "req.decoded");
     next();
   });
 };
@@ -53,11 +56,11 @@ async function run() {
     // JWT
     app.post("/jwt", (req, res) => {
       const user = req.body;
-      // console.log(user);
+      console.log(user);
       const token = jwt.sign(user, process.env.ACCESS_TOKET_SECRET, {
-        expiresIn: '1h',
+        expiresIn: "1h",
       });
-      // console.log({ token });
+      console.log(token);
       res.send({ token });
     });
 
@@ -86,7 +89,7 @@ async function run() {
     //get booking
     app.get("/bookings", verifyJwt, async (req, res) => {
       const decoded = req.decoded;
-      console.log(decoded);
+      console.log(req.query.email, decoded?.email , 'aaaaaaaaaaaaaaaaaaaa');
       if (decoded?.email !== req.query.email) {
         return res
           .status(403)
